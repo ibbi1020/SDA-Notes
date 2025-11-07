@@ -150,3 +150,78 @@ This chapter introduces the first five key GRASP patterns.
 * **Cures for Bloating:**
     1.  Use specific **use-case controllers** instead of one facade[cite: 1254].
     2.  Design the controller to **primarily delegate** tasks to other objects[cite: 1261].
+
+---
+
+### 6. 🐙 Polymorphism
+
+* **What it's for (Problem):**
+    How to handle alternatives based on type? How to create pluggable software components? [cite: 1325-1326]
+* **How to apply it (Solution):**
+    When related alternatives or behaviors vary by type (class), assign responsibility for the behavior—using polymorphic operations—to the types for which the behavior varies[cite: 1327].
+* **Example (Handling Payment Types):**
+    1.  **Responsibility:** Who should be responsible for handling different payment methods (cash, credit, check)? [cite: 1330]
+    2.  **Polymorphic Solution:** Define an abstract `Payment` class with a `pay(amount)` method. Subclasses like `CashPayment`, `CreditPayment`, and `CheckPayment` implement `pay()` differently[cite: 1331-1333].
+    3.  **Benefits:** The `Sale` class can treat all payments uniformly via the `Payment` interface, without knowing the specific type[cite: 1334].
+* **Benefits:**
+    * Supports **extensibility** (easy to add new payment types without changing existing code)[cite: 1340].
+    * Promotes **low coupling** and **high cohesion**[cite: 1341].
+* **Contraindications:**
+    Do not apply polymorphism if the variation is not based on type differences[cite: 1345].
+
+---
+
+### 7. 🏭 Pure Fabrication
+
+* **What it's for (Problem):**
+    What object should have the responsibility, when you do not want to violate High Cohesion and Low Coupling, but solutions offered by Expert (for example) are not appropriate? [cite: 1360]
+* **How to apply it (Solution):**
+    Assign a highly cohesive set of responsibilities to an artificial or convenience class that does not represent a problem domain concept—something made up, to support high cohesion, low coupling, and reuse[cite: 1359].
+* **Example (Saving a Sale to Database):**
+    1.  **Responsibility:** Who should save a `Sale` to a database? [cite: 1365]
+    2.  **Problem with Expert:** The `Sale` class has the data, but assigning persistence to it violates cohesion (mixing business logic with database concerns)[cite: 1366].
+    3.  **Pure Fabrication Solution:** Create a `SalePersistence` or `PersistenceFacade` class responsible for saving all domain objects[cite: 1367-1368].
+    4.  **Benefits:** Keeps domain classes focused on business logic, while persistence is handled separately[cite: 1369].
+* **Benefits:**
+    * Supports **High Cohesion** (domain classes do domain things; persistence classes do persistence)[cite: 1375].
+    * Supports **Low Coupling** (domain classes don't depend on database technologies)[cite: 1376].
+    * Improves **reuse** (the persistence class can be reused across different domain objects)[cite: 1377].
+* **Contraindications:**
+    Only use when Expert leads to poor cohesion or coupling; prefer domain concepts when possible[cite: 1380].
+
+---
+
+### 8. 🔄 Indirection
+
+* **What it's for (Problem):**
+    Where to assign a responsibility, to avoid direct coupling between two (or more) things? How to de-couple objects so that low coupling is supported and reuse potential remains higher? [cite: 1390]
+* **How to apply it (Solution):**
+    Assign the responsibility to an intermediate object to mediate between other components or services so that they are not directly coupled[cite: 1389].
+* **Example (Tax Calculation Service):**
+    1.  **Responsibility:** Who should handle tax calculations? [cite: 1395]
+    2.  **Direct Coupling Problem:** If `Sale` directly calls a third-party tax service, it becomes coupled to that service[cite: 1396].
+    3.  **Indirection Solution:** Create a `TaxCalculatorAdapter` that mediates between `Sale` and the tax service[cite: 1397-1398].
+    4.  **Benefits:** Changes to the tax service only affect the adapter, not the `Sale` class[cite: 1399].
+* **Benefits:**
+    * Reduces **coupling** between components[cite: 1405].
+    * Improves **reuse** and **maintainability**[cite: 1406].
+* **Contraindications:**
+    Avoid unnecessary indirection that adds complexity without benefit[cite: 1410].
+
+---
+
+### 9. 🛡️ Protected Variations
+
+* **What it's for (Problem):**
+    How to design objects, subsystems, and systems so that the variations or instability in these elements do not have an undesirable impact on other elements? [cite: 1420]
+* **How to apply it (Solution):**
+    Identify points of predicted variation or instability; assign responsibilities to create a stable interface around them[cite: 1419].
+* **Example (External Services Interface):**
+    1.  **Predicted Variation:** External services like tax calculators or payment processors may change[cite: 1425].
+    2.  **Protected Solution:** Define interfaces like `ITaxCalculator` and `IPaymentProcessor` that hide implementation details[cite: 1426-1427].
+    3.  **Benefits:** Internal code depends on stable interfaces, not volatile implementations[cite: 1428].
+* **Benefits:**
+    * Protects against **instability** in external elements[cite: 1435].
+    * Supports **modularity** and **changeability**[cite: 1436].
+* **Contraindications:**
+    Don't over-abstract stable elements; focus on known points of variation[cite: 1440].
